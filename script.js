@@ -1,55 +1,48 @@
-const movies = [
-    {
-        title: "The Shawshank Redemption",
-        year: "1994",
-        poster: "https://via.placeholder.com/200x300?text=The+Shawshank+Redemption"
-    },
-    {
-        title: "The Godfather",
-        year: "1972",
-        poster: "https://via.placeholder.com/200x300?text=The+Godfather"
-    },
-    {
-        title: "The Dark Knight",
-        year: "2008",
-        poster: "https://via.placeholder.com/200x300?text=The+Dark+Knight"
-    },
-    {
-        title: "Pulp Fiction",
-        year: "1994",
-        poster: "https://via.placeholder.com/200x300?text=Pulp+Fiction"
-    },
-    {
-        title: "Forrest Gump",
-        year: "1994",
-        poster: "https://via.placeholder.com/200x300?text=Forrest+Gump"
-    }
-];
+const searchInput = document.getElementById('searchInput');
+const searchBtn = document.getElementById('searchBtn');
+const movieContainer = document.getElementById('movieContainer');
 
-document.getElementById('search-button').addEventListener('click', function() {
-    const query = document.getElementById('search-input').value.toLowerCase();
-    searchMovies(query);
+searchBtn.addEventListener('click', () => {
+    const query = searchInput.value.toLowerCase();
+    if (query) {
+        fetchMovies(query);
+    }
 });
 
-function searchMovies(query) {
-    const results = movies.filter(movie => movie.title.toLowerCase().includes(query));
-    displayMovies(results);
+searchInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        const query = searchInput.value.toLowerCase();
+        if (query) {
+            fetchMovies(query);
+        }
+    }
+});
+
+async function fetchMovies(query) {
+    const response = await fetch('movies.json');
+    const movies = await response.json();
+    const filteredMovies = movies.filter(movie => movie.Title.toLowerCase().includes(query));
+    displayMovies(filteredMovies);
 }
 
 function displayMovies(movies) {
-    const movieContainer = document.getElementById('movie-container');
     movieContainer.innerHTML = '';
-
-    movies.forEach(movie => {
-        const movieElement = document.createElement('div');
-        movieElement.classList.add('movie');
-        
-        movieElement.innerHTML = `
-            <img src="${movie.poster}" alt="${movie.title}">
-            <h3>${movie.title}</h3>
-            <p>${movie.year}</p>
-        `;
-
-        movieContainer.appendChild(movieElement);
-    });
+    if (movies && movies.length > 0) {
+        movies.forEach(movie => {
+            const movieCard = document.createElement('div');
+            movieCard.classList.add('col-md-4', 'movie-card');
+            movieCard.innerHTML = `
+                <div class="card">
+                    <img src="${movie.Poster}" class="card-img-top" alt="${movie.Title}">
+                    <div class="card-body">
+                        <h5 class="card-title">${movie.Title}</h5>
+                        <p class="card-text">${movie.Year}</p>
+                    </div>
+                </div>
+            `;
+            movieContainer.appendChild(movieCard);
+        });
+    } else {
+        movieContainer.innerHTML = '<p class="text-center">No movies found.</p>';
+    }
 }

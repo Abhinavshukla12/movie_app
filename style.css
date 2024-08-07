@@ -1,0 +1,28 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.search-bar {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+#movieContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.movie-card {
+    margin: 10px;
+    max-width: 300px;
+}
+
+.movie-card img {
+    width: 100%;
+}
+
+.movie-card .card-body {
+    text-align: center;
+}
